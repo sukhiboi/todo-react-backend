@@ -13,9 +13,12 @@ client.get('todoList', (err, data) => {
   app.locals.todoList = JSON.parse(data) || defaultTodoList();
 });
 
-const saveTodoList = function (req) {
+const saveTodoList = function (req, res) {
   const data = JSON.stringify(req.app.locals.todoList);
-  client.set('todoList', data, err => err && console.error(err));
+  client.set('todoList', data, err => {
+    if (err) res.end(`Error Occurred\n ${err}`);
+    res.end(data);
+  });
 };
 
 app.use(express.static('./react-build'));
@@ -32,8 +35,7 @@ app.get('/api/resetList', (req, res) => {
   const { todoList } = req.app.locals;
   todoList.todos = [];
   todoList.lastId = 0;
-  saveTodoList(req);
-  res.json(todoList);
+  saveTodoList(req, res);
 });
 
 app.post('/api/addTodo', (req, res) => {
@@ -41,30 +43,26 @@ app.post('/api/addTodo', (req, res) => {
   const content = req.body.content;
   const id = todoList.lastId++;
   todoList.todos.push({ content, id, status: getDefaultStatus() });
-  saveTodoList(req);
-  res.json(todoList);
+  saveTodoList(req, res);
 });
 
 app.post('/api/deleteTodo/:id', (req, res) => {
   const { todoList } = req.app.locals;
   todoList.todos = todoList.todos.filter(todo => todo.id !== +req.params.id);
-  saveTodoList(req);
-  res.json(todoList);
+  saveTodoList(req, res);
 });
 
 app.post('/api/updateHeading', (req, res) => {
   const { todoList } = req.app.locals;
   todoList.heading = req.body.heading;
-  saveTodoList(req);
-  res.json(todoList);
+  saveTodoList(req, res);
 });
 
 app.post('/api/toggleTodo/:id', (req, res) => {
   const { todoList } = req.app.locals;
   const todoToUpdate = todoList.todos.find(todo => todo.id === +req.params.id);
   todoToUpdate.status = getNextStatus(todoToUpdate.status);
-  saveTodoList(req);
-  res.json(todoList);
+  saveTodoList(req, res);
 });
 
 const PORT = process.env.PORT || process.argv[2] || 3001;
