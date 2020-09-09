@@ -6,7 +6,7 @@ const defaultRedisURL = 'redis://localhost:6379';
 const client = redis.createClient(process.env.REDIS_URL || defaultRedisURL);
 
 const { getDefaultStatus, getNextStatus } = require('./todoItemStates');
-const defaultTodoList = () => ({ heading: 'Todo List', todos: [], lastId: 0 });
+const defaultTodoList = () => ({ heading: 'Todo', todos: [], lastId: 0 });
 
 client.get('todoList', (err, data) => {
   if (err) app.locals.todoList = defaultTodoList();
