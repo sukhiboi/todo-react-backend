@@ -1,0 +1,12 @@
+language: node_js
+node_js: lts/*
+install: rm -rf package.json package-lock.json src/ lib/ ./*.js test/ public/
+jobs:
+  include:
+    - stage: DEPLOY
+      script: './scripts/build.sh'
+      deploy:
+        provider: heroku
+        api_key:
+          secure: Y5sKF96aqKNpmDhcHGJytkb53/hJ1eW+NQZGGIu3Qga/syntJoV9CBj+fI1a0fKSu3xMTkY7qDl+lANFwHkDvMYHg3ktXGUlW07IasbxzGZISC9hQtD1NVHG9cMvUicgAYfaSiPAiF6ehEaxutF4DlfAB7rSTXgisU/jNtdGXH119Iznl8yC8/Ve62ZgtxOt9BuhJIl0VxmDxzbiyRPr5tVhWEItz0WNSy6a3GQ49fV7kY5jTwUo81tVx2MFEIUp8wgTrINayJ3+fLLeJkZ/zE3Y0e9i4+0KZj2FO+tImTrvcWi6WLQuzlL7H2j56qxlbeuhJK7JdIXOcZiqdK908xFJmhtjdcFZnHHV4m8isTjrl9uCwDlB+vZ2Vde6qdS3FO86TvneM6ijsvHORBrPAV7EsNUZU8V+NA7JPdzCRV/vsebSBmVuhctrzVmWmbmhfSu8/XQsiINUUmRFUFrmOUpFCSHwxEHvcKrTKqt+4EgMem5sny9IFz/j3IV514l+l7JILny5WrufuxTXRvBKNFflaoQtIOrgBrqK4rcyhEp+/fCJ3TIM/T3FBRPPQs429Jyq7RnF85ekp/ooTZrKr/J1UHUuGEuwT+GSC8S++DuJwPYsa8UJTvSbC2A1jAiShSTVZhrRaho02kuq1TyGu/1xaK3iHo3UDveh0ySX4Ow=
+        run: restart
